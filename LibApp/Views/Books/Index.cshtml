@@ -25,8 +25,35 @@
                 <td><a asp-action="Edit" asp-route-id="@book.Id">@Html.DisplayFor(modelItem => book.Title)</a></td>
                 <td>@book.Genre.Name</td>
                 <td><a asp-action="Details" asp-route-id="@book.Id">Details</a></td>
-
             </tr>
+        }
+            @section Scripts
+            {
+            <script>
+                $(document).ready(function () {
+                    $('#books').DataTable({
+                        ajax: {
+                            url: "api/books",
+                            dataSrc: ""
+                        },
+                        columns: [
+                            {
+                                data: "title",
+                                render: function (data, type, book) {
+                                    return "<a href='books/edit/" + book.id + "'>" + book.title + "</a>";
+                                }
+                            },
+                            {
+                                data: "genre.name"
+                            },
+                            {
+                                data: "author"
+                            },
+                        ]
+                    });
+                });
+            </script>
+
         }
     </tbody>
 </table>
