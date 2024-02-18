@@ -19,14 +19,17 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var book in Model)
-        {
-            <tr>
-                <td><a asp-action="Edit" asp-route-id="@book.Id">@Html.DisplayFor(modelItem => book.Title)</a></td>
-                <td>@book.Genre.Name</td>
-                <td><a asp-action="Details" asp-route-id="@book.Id">Details</a></td>
-            </tr>
-        }
+        <table id="books" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Genre</th>
+                    <th>Author</th>
+                    <th>Actions</th>
+               </tr>
+            </thead>
+        </tbody>
+    </table>
             @section Scripts
             {
             <script>
@@ -34,13 +37,18 @@
                     $('#books').DataTable({
                         ajax: {
                             url: "api/books",
-                            dataSrc: ""
+                            dataSrc: "",
+                            type: "GET",
+                            error: function (xhr, status, error) 
+                            {
+                                console.error("An error occurred: " + xhr.status + " " + error);
+                            }
                         },
                         columns: [
                             {
                                 data: "title",
                                 render: function (data, type, book) {
-                                    return "<a href='books/edit/" + book.id + "'>" + book.title + "</a>";
+                                    return "<a href='/Books/Details" + book.id + "'>" + book.title + "</a>";
                                 }
                             },
                             {
@@ -49,6 +57,14 @@
                             {
                                 data: "author"
                             },
+                            {
+                                data: "id",
+                                render: function (data) 
+                                {
+                                    return "<a class='btn btn-default' href='/Books/Edit/" + data + "'>Edit</a> " +
+                                           "<a class='btn btn-info' href='/Books/Details/" + data + "'>Details</a>";
+                                },
+                            }
                         ]
                     });
                 });
