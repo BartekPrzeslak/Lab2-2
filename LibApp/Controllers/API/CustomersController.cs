@@ -90,6 +90,17 @@ namespace LibApp.Controllers.API
             return Ok(customerInDb);
         }
 
+        // GET
+        [HttpGet("{id}")]
+        public ActionResult<CustomerDto> Details(int id)
+        {
+            var customer = _context.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id);
+
+            if (customer == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<Customer, CustomerDto>(customer));
+        }
 
         private ApplicationDbContext _context;
         private IMapper _mapper;
